@@ -19,7 +19,6 @@ mutation {
   register(email: "${email}", password: "${password}")
 }
 `
-
 test('Register user', async () => {
   const response = await request(getHost(), mutation)
   expect(response).toEqual({ register: true })
