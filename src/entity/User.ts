@@ -6,8 +6,7 @@ import {
   BaseEntity
 } from 'typeorm'
 import * as uuidv4 from 'uuid/v4'
-
-@Entity()
+@Entity('users')
 export class User extends BaseEntity {
   @PrimaryColumn('uuid') id: string
 
