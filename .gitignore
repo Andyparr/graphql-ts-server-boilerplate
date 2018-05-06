@@ -3,3 +3,5 @@
 node_modules/
 build/
 temp/
+*.log
+dump.rdb
