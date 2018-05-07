@@ -5,3 +5,5 @@ build/
 temp/
 *.log
 dump.rdb
+coverage/
+.env

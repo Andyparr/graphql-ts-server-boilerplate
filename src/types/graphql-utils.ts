@@ -5,7 +5,7 @@ export interface ResolverMap {
     [key: string]: (
       parent: any,
       args: any,
-      contest: { redis: Redis; url: string },
+      context: { redis: Redis; url: string },
       info: any
     ) => any
   }

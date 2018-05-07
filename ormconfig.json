@@ -1,5 +1,4 @@
-[
-  {
+[ {
     "name": "development",
     "type": "postgres",
     "host": "localhost",
@@ -8,10 +7,11 @@
     "password": "",
     "database": "graphql-ts-server-boilerplate",
     "synchronize": true,
+    "dropSchema": false,
     "logging": true,
-    "entities": ["src/entity/**/*.ts"],
-    "migrations": ["src/migration/**/*.ts"],
-    "subscribers": ["src/subscriber/**/*.ts"],
+    "entities": [ "src/entity/**/*.ts" ],
+    "migrations": [ "src/migration/**/*.ts" ],
+    "subscribers": [ "src/subscriber/**/*.ts" ],
     "cli": {
       "entitiesDir": "src/entity",
       "migrationsDir": "src/migration",
@@ -29,9 +29,9 @@
     "synchronize": true,
     "logging": false,
     "dropSchema": true,
-    "entities": ["src/entity/**/*.ts"],
-    "migrations": ["src/migration/**/*.ts"],
-    "subscribers": ["src/subscriber/**/*.ts"],
+    "entities": [ "src/entity/**/*.ts" ],
+    "migrations": [ "src/migration/**/*.ts" ],
+    "subscribers": [ "src/subscriber/**/*.ts" ],
     "cli": {
       "entitiesDir": "src/entity",
       "migrationsDir": "src/migration",
