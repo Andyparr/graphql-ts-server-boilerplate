@@ -1,2 +1,2 @@
-export const invalidLogin = 'Invalid Login'
-export const confirmEmailError = 'Please confirm your email'
+export const invalidLogin = "invalid login";
+export const confirmEmailError = "please confirm your email";

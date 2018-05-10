@@ -1,109 +1,114 @@
-import { request } from 'graphql-request'
-import { User } from '../../entity/User'
+import { request } from "graphql-request";
+import { User } from "../../entity/User";
 import {
   duplicateEmail,
   emailNotLongEnough,
   invalidEmail,
   passwordNotLongEnough
-} from './errorMessages'
-import { createTypeormConnection } from '../../utils/createTypeormConnection'
+} from "./errorMessages";
+import { createTypeormConn } from "../../utils/createTypeormConn";
+import { Connection } from "typeorm";
 
-const validEmail = 'test@email.com'
-const validPassword = 'testpassword'
+const email = "tom@bob.com";
+const password = "jalksdf";
 
-const mutation = (email: string, password: string) => `
+const mutation = (e: string, p: string) => `
 mutation {
-  register(email: "${email}", password: "${password}") {
+  register(email: "${e}", password: "${p}") {
     path
     message
   }
 }
-`
+`;
 
+let conn: Connection;
 beforeAll(async () => {
-  await createTypeormConnection()
-})
+  conn = await createTypeormConn();
+});
+afterAll(async () => {
+  conn.close();
+});
 
-describe('Resgister user', async () => {
-  test('Register user successfully', async () => {
+describe("Register user", async () => {
+  it("check for duplicate emails", async () => {
+    // make sure we can register a user
     const response = await request(
       process.env.TEST_HOST as string,
-      mutation(validEmail, validPassword)
-    )
-    expect(response).toEqual({ register: null })
-    const users = await User.find({ where: { validEmail } })
-    expect(users).toHaveLength(1)
-    const user = users[0]
-    expect(user.email).toEqual(validEmail)
-    expect(user.password).not.toEqual(validPassword)
-  })
+      mutation(email, password)
+    );
+    expect(response).toEqual({ register: null });
+    const users = await User.find({ where: { email } });
+    expect(users).toHaveLength(1);
+    const user = users[0];
+    expect(user.email).toEqual(email);
+    expect(user.password).not.toEqual(password);
 
-  test('Register user with duplicate email', async () => {
-    const response: any = await request(
+    const response2: any = await request(
       process.env.TEST_HOST as string,
-      mutation(validEmail, validPassword)
-    )
-    expect(response.register).toHaveLength(1)
-    expect(response.register[0]).toEqual({
-      path: 'email',
+      mutation(email, password)
+    );
+    expect(response2.register).toHaveLength(1);
+    expect(response2.register[0]).toEqual({
+      path: "email",
       message: duplicateEmail
-    })
-  })
+    });
+  });
 
-  test('Invalid email error', async () => {
-    const response: any = await request(
+  it("check bad email", async () => {
+    const response3: any = await request(
       process.env.TEST_HOST as string,
-      mutation('te', validPassword)
-    )
-    expect(response).toEqual({
+      mutation("b", password)
+    );
+    expect(response3).toEqual({
       register: [
         {
-          path: 'email',
+          path: "email",
           message: emailNotLongEnough
         },
         {
-          path: 'email',
+          path: "email",
           message: invalidEmail
         }
       ]
-    })
-  })
+    });
+  });
 
-  test('Invalid password error', async () => {
-    const response: any = await request(
+  it("check bad password", async () => {
+    // catch bad password
+    const response4: any = await request(
       process.env.TEST_HOST as string,
-      mutation(validEmail, 'te')
-    )
-    expect(response).toEqual({
+      mutation(email, "ad")
+    );
+    expect(response4).toEqual({
       register: [
         {
-          path: 'password',
+          path: "password",
           message: passwordNotLongEnough
         }
       ]
-    })
-  })
+    });
+  });
 
-  test('Invalid email and password error', async () => {
-    const response: any = await request(
+  it("check bad password and bad email", async () => {
+    const response5: any = await request(
       process.env.TEST_HOST as string,
-      mutation('te', 'te')
-    )
-    expect(response).toEqual({
+      mutation("df", "ad")
+    );
+    expect(response5).toEqual({
       register: [
         {
-          path: 'email',
+          path: "email",
           message: emailNotLongEnough
         },
         {
-          path: 'email',
+          path: "email",
           message: invalidEmail
         },
         {
-          path: 'password',
+          path: "password",
           message: passwordNotLongEnough
         }
       ]
-    })
-  })
-})
+    });
+  });
+});
